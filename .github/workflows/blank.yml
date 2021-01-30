@@ -31,7 +31,11 @@ jobs:
 
       # 找到kernel目录
       - name: kernel
-        run: bash cd kernel
+        run: |
+          ls
+          cd kernel
+          pwd
+           
 
       # 创建ko文件
       - name: make ko file
