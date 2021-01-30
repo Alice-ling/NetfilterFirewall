@@ -27,7 +27,7 @@ jobs:
       
       #打印当前目录
       - name: pwd
-        run: bash pwd
+        run: pwd
 
       # 找到kernel目录
       - name: kernel
