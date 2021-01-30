@@ -25,12 +25,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # 找到kernel目录
+      - name: kernel
+        run: cd kernel
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      # 创建ko文件
+      - name: make ko file
+        run: touch ko
+          
+      #insmod挂载
+      - name: insmod
+        run: sudo insmod NetfilterFirewall.ko
+        
+      #创建字符设备
+      - name: device
+        run: sudo mknod fpNetfilterFirewall c 250 0
+      
+      
+          
