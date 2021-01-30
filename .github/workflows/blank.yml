@@ -27,11 +27,11 @@ jobs:
 
       # 找到kernel目录
       - name: kernel
-        run: bash cd kernel
+        run: shell cd kernel
 
       # 创建ko文件
       - name: make ko file
-        run: bash touch ko
+        run: shell touch ko
           
       #insmod挂载
       - name: insmod
