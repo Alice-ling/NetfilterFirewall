@@ -30,8 +30,7 @@ jobs:
         run: |
           cd kernel
           pwd
-          touch ko
-          pwd
+          
           sudo insmod NetfilterFirewall.ko
           dmesg
           sudo mknod fpNetfilterFirewall c 250 0
