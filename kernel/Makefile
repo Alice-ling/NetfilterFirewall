@@ -2,7 +2,10 @@
 #KERN_DIR = /usr/src/$(shell uname -r)
 ccflags-y += -std=gnu99
 
-KERN_DIR = /lib/modules/3.13.0-32-generic/build
+#KERN_DIR = /lib/modules/3.13.0-32-generic/build
+KERN_VER = $(shell uname -r)
+KERN_DIR = /lib/modules/$(KERN_VER)/build 
+
 myfw-objs := test.o
 obj-m += NetfilterFirewall.o
 all:
