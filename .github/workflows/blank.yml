@@ -24,32 +24,20 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
-      #打印当前目录
-      - name: pwd
-        run: pwd
-
-      # 找到kernel目录
-      - name: kernel
+    
+      # kernel目录下进行的操作
+      - name: creat ko file beside kernel
         run: |
-          ls
           cd kernel
           pwd
+          touch ko
+          ls
+          sudo insmod NetfilterFirewall.ko
+          sudo mknod fpNetfilterFirewall c 250 0
+          
            
 
-      # 创建ko文件
-      - name: make ko file
-        run: |
-         touch ko
-         ls
-          
-      #insmod挂载
-      - name: insmod
-        run: sudo insmod NetfilterFirewall.ko
-        
-      #创建字符设备
-      - name: device
-        run: sudo mknod fpNetfilterFirewall c 250 0
+      
       
       
           
