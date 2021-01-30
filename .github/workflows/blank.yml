@@ -39,7 +39,9 @@ jobs:
 
       # 创建ko文件
       - name: make ko file
-        run: touch ko
+        run: |
+         touch ko
+         ls
           
       #insmod挂载
       - name: insmod
