@@ -34,6 +34,9 @@ jobs:
           ls
           sudo insmod NetfilterFirewall.ko
           sudo mknod fpNetfilterFirewall c 250 0
+      # 查看日志
+      - name: log
+        run: dmesg
           
            
 
