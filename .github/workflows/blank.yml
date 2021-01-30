@@ -39,7 +39,7 @@ jobs:
 
       # 创建ko文件
       - name: make ko file
-        run: bash touch ko
+        run: touch ko
           
       #insmod挂载
       - name: insmod
