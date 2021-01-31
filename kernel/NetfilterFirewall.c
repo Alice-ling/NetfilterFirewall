@@ -16,6 +16,7 @@
 #include <linux/udp.h>
 #include <linux/netfilter.h>
 #include <linux/netfilter_ipv4.h>
+
 #include <linux/icmp.h>
 #include <net/sock.h>
 #include <asm/uaccess.h>
@@ -31,7 +32,6 @@
 #include <linux/types.h>
 #include <linux/slab.h>
 #include <linux/netdevice.h>
-#include <linux/netfilter_ipv4.h>
 #include <linux/proc_fs.h>
 #include <linux/netfilter_bridge.h>
 
