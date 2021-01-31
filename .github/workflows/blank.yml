@@ -27,7 +27,7 @@ jobs:
         
     # 环境
       - name: 'Set up QT'
-        run: install-qt-action
+        uses: jurplel/install-qt-action@v2        
         
       # kernel目录下进行的操作
       - name: actions beside kernel
@@ -36,14 +36,15 @@ jobs:
           pwd
           make
           sudo insmod NetfilterFirewall.ko
+          sudo mknod NetfilterFirewall c 250 0
+          sudo chmod 777 NetfilterFirewall
+
       #dest目录下进行的操作
       - name: actions beside dest
         run: |
           cd dest
           pwd
-          sudo mknod NetfilterFirewall c 250 0
           sudo chmod 777 fpNetfilterFirewall
-          sudo chmod 777 NetfilterFirewall
           ls -l
           ./fpNetfilterFirewall
         
