@@ -34,8 +34,6 @@
 #include <linux/netfilter_ipv4.h>
 #include <linux/proc_fs.h>
 #include <linux/netfilter_bridge.h>
-#include "stdio.h"
-#include <stdlib.h>
 
 // const variables  define
 #define CDEV_NAME "NetfilterFirewall"
