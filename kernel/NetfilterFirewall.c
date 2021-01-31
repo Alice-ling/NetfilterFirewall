@@ -50,6 +50,8 @@
 #define FW_DEL_RULE 1
 #define FW_CLEAR_RULE 2
 
+ssize_t dev_read_fn(struct file *, char __user *, size_t, loff_t *);
+
 // filter rules struct define
 typedef struct Node{
   unsigned int sip;
@@ -105,11 +107,7 @@ static NodePointer lheader,ltail; // rule list header pointer and tail pointer, 
 static struct cdev netfilter_cdev;
 
 // hook function
-unsigned int hook_func(unsigned int hooknum,
-               struct sk_buff *skb,
-               const struct net_device *in,
-               const struct net_device *out,
-               int (*okfn)(struct sk_buff *));
+unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_state *state);
 
 // 字符设备选项拿出需要的字段并且绑定相应的操作函数
 struct file_operations netfilter_cdev_fops = {
@@ -119,11 +117,18 @@ struct file_operations netfilter_cdev_fops = {
   .release = netfilter_cdev_release
 };
 
+
+
+
+
+
+
+
 // hook函数选项设置
 struct nf_hook_ops hook_options_entry = {
   .hook = hook_func,
   .hooknum = NF_INET_PRE_ROUTING ,
-  .owner = THIS_MODULE,
+  //.owner = THIS_MODULE,
   .pf = PF_INET,
   .priority = NF_IP_PRI_FIRST
 };
@@ -131,7 +136,7 @@ struct nf_hook_ops hook_options_entry = {
 struct nf_hook_ops hook_options_out = {
   .hook = hook_func,
   .hooknum = NF_INET_POST_ROUTING ,
-  .owner = THIS_MODULE,
+  //.owner = THIS_MODULE,
   .pf = PF_INET,
   .priority = NF_IP_PRI_FIRST
 };
@@ -192,17 +197,18 @@ static long netfilter_cdev_ioctl(struct file *file, unsigned int cmd, unsigned l
 /*
  * hook函数，也就是包判断分发处理函数
  */
-unsigned int hook_func(unsigned int hooknum,
-               struct sk_buff *skb,
-               const struct net_device *in,
-               const struct net_device *out,
-               int (*okfn)(struct sk_buff *)) {
+unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_state *state) {
 
-  printk("\nIn the hook function.");
+  
   unsigned int ret = NF_ACCEPT; // default policy
-
   // struct ethhdr *eth = ethhdr(skb);
   struct iphdr *iph = ip_hdr(skb);
+  Node tnode = {0,0,0,0,0,0,0,false,false,NULL};
+  struct tcphdr *tcph; // Transport header
+  struct udphdr *udph;
+  int index = findNodeFilterMatch(&tnode);
+  Node *p = lheader;
+  printk("\nIn the hook function."); 
 
   // set a node, just need to define ip,port and protocol
   if(!skb || !iph) {
@@ -221,7 +227,7 @@ unsigned int hook_func(unsigned int hooknum,
       return ret;
   }
 
-  Node tnode = {0,0,0,0,0,0,0,false,false,NULL};
+  
 
   // get ip
   tnode.sip = iph->saddr;
@@ -229,8 +235,7 @@ unsigned int hook_func(unsigned int hooknum,
 
   // get protocol and port
   tnode.protocol = 0;
-  struct tcphdr *tcph; // Transport header
-  struct udphdr *udph;
+ 
   switch(iph->protocol) {
     case IPPROTO_TCP:
       tcph = (struct tcphdr *)(skb->data + (iph->ihl * 4));
@@ -262,7 +267,7 @@ unsigned int hook_func(unsigned int hooknum,
   }
 
   // filter, try to find one
-  int index = findNodeFilterMatch(&tnode);
+
   if(index < 0) { // not found, means use default rule NF_ACCEPT;
     return ret;
   } else {
@@ -274,7 +279,7 @@ unsigned int hook_func(unsigned int hooknum,
   // seems unbelieveable, it seems not problem!
   /* judge if permit */
   printk("before for");
-  Node *p = lheader;
+
   int i = 0;
   for(i = 0; i <= index; i++) {
     p = p->next;
