@@ -39,7 +39,10 @@ jobs:
       
       #set platform
       - name: set platform
-        run: sudo apt install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0
+        #run: sudo apt install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0
+        run: |
+          export QT_DEBUG_PLUGINS=1
+          qtcreator
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
