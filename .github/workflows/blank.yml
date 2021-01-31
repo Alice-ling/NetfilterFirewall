@@ -36,7 +36,10 @@ jobs:
           #target: desktop
           # 架构
           #arch: linux_x64
-
+      
+      #set platform
+      - name: set platform
+        run: sudo apt install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
