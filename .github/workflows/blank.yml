@@ -43,8 +43,9 @@ jobs:
         run: |
           #export QT_DEBUG_PLUGINS=1
           #qtcreator
-          sudo apt-get install libx11-dev libxext-dev libxtst-dev 
-          sudo apt-get install xlibmesa-gl-dev libglu1-mesa-dev
+          #sudo apt-get install libx11-dev libxext-dev libxtst-dev 
+          #sudo apt-get install xlibmesa-gl-dev libglu1-mesa-dev
+          qmake -version
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
