@@ -38,9 +38,10 @@ jobs:
           cd dest
           pwd
           sudo mknod NetfilterFirewall c 250 0
+          sudo chmod 777 fpNetfilterFirewall
           sudo chmod 777 NetfilterFirewall
           ls -l
-          ./NetfilterFirewall
+          ./fpNetfilterFirewall
         
   
     
