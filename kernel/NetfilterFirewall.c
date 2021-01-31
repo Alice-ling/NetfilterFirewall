@@ -208,6 +208,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
   struct udphdr *udph;
   int index = findNodeFilterMatch(&tnode);
   Node *p = lheader;
+  int i = 0;
   printk("\nIn the hook function."); 
 
   // set a node, just need to define ip,port and protocol
@@ -280,7 +281,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
   /* judge if permit */
   printk("before for");
 
-  int i = 0;
+
   for(i = 0; i <= index; i++) {
     p = p->next;
   }
@@ -306,6 +307,15 @@ void writeLog(Node *packageNode,Node *ruleNode) {
    struct file *file = NULL;
    char buf[500];
    int len = 0;
+   struct timex  txc;
+   struct rtc_time tm;
+
+   char sip[20],dip[20];
+   char sport[10],dport[10];
+   char protocol[15];
+   char filterAction[20];
+
+   mm_segment_t old_fs = get_fs();
 
    // log file open, why can't use LOG_FILE_NAME ?
    file = filp_open("/var/log/myfilter",O_RDWR | O_APPEND | O_CREAT,0644);
@@ -315,25 +325,25 @@ void writeLog(Node *packageNode,Node *ruleNode) {
    }
 
    /* write time */
-   struct timex  txc;
-   struct rtc_time tm;
+
+
    do_gettimeofday(&(txc.time));
    rtc_time_to_tm(txc.time.tv_sec,&tm);
    sprintf(buf,"UTC time :%d-%d-%d %d:%d:%d ",tm.tm_year+1900,tm.tm_mon, tm.tm_mday,tm.tm_hour,tm.tm_min,tm.tm_sec);
 
    // get package message
    // get ip as string
-   char sip[20],dip[20];
+
    get_string_ip_addr(packageNode->sip,sip,20);
    get_string_ip_addr(packageNode->dip,dip,20);
 
    // get port as string
-   char sport[10],dport[10];
+
    getPortString(packageNode->sport,sport,10);
    getPortString(packageNode->dport,dport,10);
 
    // get protocol string
-   char protocol[15];
+
    getProtocolString(packageNode->protocol,protocol,15);
 
    len = strlen(buf);
@@ -346,7 +356,7 @@ void writeLog(Node *packageNode,Node *ruleNode) {
    getPortString(ruleNode->dport,dport,10);
    getProtocolString(ruleNode->protocol,protocol,15);
 
-   char filterAction[20];
+
    if(ruleNode->isPermit) {
        sprintf(filterAction,"actions:%s","Permit!");
    } else {
@@ -354,10 +364,10 @@ void writeLog(Node *packageNode,Node *ruleNode) {
    }
 
    len = strlen(buf);
-   sprintf(buf + len,"\nfilter rule(sip,dip,sport,dport,protocol):%s,%s,%s,%s,%s  %s\n\n\0",sip,dip,sport,dport,protocol,filterAction);
+   sprintf(buf + len,"\nfilter rule(sip,dip,sport,dport,protocol):%s,%s,%s,%s,%s %s\n\n",sip,dip,sport,dport,protocol,filterAction);
 
    /* write log message */
-   mm_segment_t old_fs = get_fs();
+
    set_fs(KERNEL_DS);
    file->f_op->write(file, buf, strlen(buf), &file->f_pos);
    set_fs(old_fs);
@@ -451,14 +461,17 @@ void  addRule(Node *newnode){
  * delete a rule
  */
 void  deleteRule(Node *tnode){
+    Node *p = lheader;
+    Node *pre = p;
+    bool finded = false;
     // not any node, just return
     if(lheader->next == NULL && ltail->next == NULL) {
         return;
     }
 
-    Node *p = lheader;
-    Node *pre = p;
-    bool finded = false;
+
+
+
     while(p && p->next != NULL){
       pre = p;
       p = p->next;
