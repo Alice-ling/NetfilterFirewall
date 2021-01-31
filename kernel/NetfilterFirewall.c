@@ -683,8 +683,8 @@ static int __init my_netfilter_init(void) {
  */
 static void __exit my_netfilter_exit(void) {
 
-  nf_unregister_hook(&hook_options_entry);
-  nf_unregister_hook(&hook_options_out);
+  nf_unregister_net_hook(&init_net,&hook_options_entry);
+  nf_unregister_net_hook(&init_net,&hook_options_out);
   cdev_del(&netfilter_cdev);
   unregister_chrdev_region(MKDEV(major_number,0),1);
   printk(KERN_INFO "prompt: WOW! exit!\n");
