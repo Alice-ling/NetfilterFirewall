@@ -647,8 +647,8 @@ static int __init my_netfilter_init(void) {
     printk("Error in cdev_add.");
   }
 
-  nf_register_hook(&hook_options_entry);
-  nf_register_hook(&hook_options_out);
+  nf_register_net_hook(&init_net,&hook_options_entry);
+  nf_register_net_hook(&init_net,&hook_options_out);
   initList();
 
   printk(KERN_INFO "prompt: Aha! Register successful! \nMain Device Number is %d\n", major_number);
