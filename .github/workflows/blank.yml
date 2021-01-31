@@ -32,8 +32,13 @@ jobs:
           pwd
           make
           sudo insmod NetfilterFirewall.ko
-          dmesg
           sudo mknod fpNetfilterFirewall c 250 0
+      #dest目录下进行的操作
+      - name: actions beside dest
+        run: |
+          cd dest
+          pwd
+          sudo ./NetfilterFirewall
         
   
     
