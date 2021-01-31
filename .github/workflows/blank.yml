@@ -33,9 +33,9 @@ jobs:
           # 编译平台。一般不修改。
           #host: # optional
           # 目标平台。默认desktop，可选android、ios
-          target: desktop
+          #target: desktop
           # 架构
-          arch: linux_x64
+          #arch: linux_x64
 
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
