@@ -24,12 +24,14 @@ jobs:
     steps:
        # 环境
       - name: 'Set up QT'
-        uses: jurplel/install-qt-action@v2       
+        uses: jurplel/install-qt-action@v2 
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         
-    
+      #platform
+      - name: platform
+        run: sudo apt-get install libxcb-xinerama0
         
       # kernel目录下进行的操作
       - name: actions beside kernel
