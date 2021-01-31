@@ -31,7 +31,11 @@ jobs:
         
       #platform
       - name: platform
-        run: sudo apt-get install libxcb-xinerama0
+        run: |
+         pip3 uninstall opencv-python
+         pip3 install opencv-contrib-python
+         sudo apt-get install python3-opencv
+
         
       # kernel目录下进行的操作
       - name: actions beside kernel
