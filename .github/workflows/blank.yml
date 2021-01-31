@@ -22,12 +22,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+       # 环境
+      - name: 'Set up QT'
+        uses: jurplel/install-qt-action@v2       
+      
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         
-    # 环境
-      - name: 'Set up QT'
-        uses: jurplel/install-qt-action@v2        
+    
         
       # kernel目录下进行的操作
       - name: actions beside kernel
