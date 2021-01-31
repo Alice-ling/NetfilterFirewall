@@ -28,7 +28,6 @@ jobs:
       # kernel目录下进行的操作
       - name: actions beside kernel
         run: |
-          man nf_register_hook
           cd kernel
           pwd
           make
