@@ -32,8 +32,8 @@ jobs:
       #platform
       - name: platform
         run: |
-         pip3 uninstall opencv-python
-         pip3 install opencv-contrib-python
+         #pip3 uninstall opencv-python
+         pip install opencv-contrib-python
          sudo apt-get install python3-opencv
 
         
