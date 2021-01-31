@@ -25,11 +25,11 @@ jobs:
        # 环境
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
-        with:
+        #with:
           # 安装目录,默认当前路径
           #dir: # optional
           # 版本,默认最新的LTS(5.12.6)
-          version: 5.3.1
+          #version: 5.3.1
           # 编译平台。一般不修改。
           #host: # optional
           # 目标平台。默认desktop，可选android、ios
