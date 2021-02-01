@@ -23,8 +23,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
        # 环境
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+      #- name: Install Qt
+       # uses: jurplel/install-qt-action@v2
         #with:
           # 安装目录,默认当前路径
           #dir: # optional
@@ -38,14 +38,14 @@ jobs:
           #arch: linux_x64
       
       #set platform
-      - name: set platform
+      #- name: set platform
         #run: sudo apt install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0
-        run: |
+       # run: |
           #export QT_DEBUG_PLUGINS=1
           #qtcreator
           #sudo apt-get install libx11-dev libxext-dev libxtst-dev 
           #sudo apt-get install xlibmesa-gl-dev libglu1-mesa-dev
-          qmake -version
+          #qmake -version
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -60,15 +60,17 @@ jobs:
           sudo insmod NetfilterFirewall.ko
           sudo mknod NetfilterFirewall c 250 0
           sudo chmod 777 NetfilterFirewall
+          gcc firewall.cpp -lstdc++ -o firewall
+          ./firewall
 
       #dest目录下进行的操作
-      - name: actions beside dest
-        run: |
-          cd dest
-          pwd
-          sudo chmod 777 fpNetfilterFirewall
-          ls -l
-          ./fpNetfilterFirewall
+      #- name: actions beside dest
+        #run: |
+          #cd dest
+          #pwd
+         # sudo chmod 777 fpNetfilterFirewall
+          #ls -l
+          #./fpNetfilterFirewall
         
   
     
