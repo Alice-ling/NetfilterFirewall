@@ -15,7 +15,6 @@
 #include<stdlib.h>
 #include <stdbool.h>
 #include <cstring>
-#include <errno.h> 
 #include <iostream>
 using namespace std;
 
@@ -24,7 +23,7 @@ using namespace std;
 #define FW_CLEAR_RULE 2
 
 #define FW_CDEV_NAME "./fpNetfilterFirewall"
-#define file "./rules.dat"
+#define _FILE "./rules.dat"
 
 struct Node{
 
@@ -89,7 +88,7 @@ int main(){
    }*/
    fd = open(FW_CDEV_NAME, O_RDWR);
     if(fd <= 0) {
-        printf("Error %d: Failed to open file\n", errno);
+        printf("Error while openning fpNetfilterFirewall");
     }
     /*else {
         statusLabel->setText("Successful openning " + QString(FW_CDEV_NAME));
@@ -99,12 +98,13 @@ int main(){
     // read rules
   
     // read int rules
-    if((fp=fopen(file,"rb"))!=(FILE*)0) {
+    if((fp=fopen(_FILE,"rb"))!=(FILE*)0)
+     {
         item.next = NULL;
         while((fgets(str,100,fp))!=(char*)0) {
            //line = string::fromLocal8Bit(file.readLine().data());
-           for(int i=0;str[i]!='\0';i++) line[i]=str[i];
-           cout<<line;
+           /*for(int i=0;str[i]!='\0';i++) line[i]=str[i];
+           cout<<line;*/
 
            //item.sip =  
            p=strtok(str,":");
@@ -170,9 +170,10 @@ int main(){
         }
         fclose(fp);
     }
+   //else printf("open rules.dat fail");
 
     // add rules to table widget, and send to kernel
-        ioctl(fd, FW_ADD_RULE, item);
+       ioctl(fd, FW_ADD_RULE, item);
  
     // send to kernel,
     return 0;
