@@ -15,6 +15,7 @@
 #include<stdlib.h>
 #include <stdbool.h>
 #include <cstring>
+#include <errno.h> 
 #include <iostream>
 using namespace std;
 
@@ -88,7 +89,7 @@ int main(){
    }*/
    fd = open(FW_CDEV_NAME, O_RDWR);
     if(fd <= 0) {
-        printf("Error while openning fpNetfilterFirewall");
+        printf("Error %d: Failed to open file\n", errno);
     }
     /*else {
         statusLabel->setText("Successful openning " + QString(FW_CDEV_NAME));
