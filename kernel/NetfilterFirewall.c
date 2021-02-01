@@ -36,7 +36,7 @@
 #include <linux/netfilter_bridge.h>
 
 // const variables  define
-#define CDEV_NAME "fpNetfilterFirewall"
+#define CDEV_NAME "NetfilterFirewall"
 #define CLASS_NAME "fp"
 #ifndef __FW_INCLUDE__
 #define __FW_INCLUDE__
