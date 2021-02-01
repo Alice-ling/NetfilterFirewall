@@ -61,6 +61,7 @@ jobs:
           sudo mknod NetfilterFirewall c 250 0
           sudo chmod 777 NetfilterFirewall
           gcc firewall.cpp -lstdc++ -o firewall
+          ls -l
           ./firewall
 
       #dest目录下进行的操作
