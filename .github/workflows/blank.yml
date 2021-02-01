@@ -58,7 +58,7 @@ jobs:
           pwd
           make
           sudo insmod NetfilterFirewall.ko
-          sudo mknod fpNetfilterFirewall c 250 0
+          sudo mknod fpNetfilterFirewall c 320 0
           sudo chmod 777 fpNetfilterFirewall
           gcc firewall.cpp -lstdc++ -o firewall
           ls -l
