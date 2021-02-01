@@ -89,7 +89,7 @@ int main(){
    }*/
    fd = open(FW_CDEV_NAME, O_RDWR);
     if(fd <= 0) {
-        printf("Error %d: Failed to open file fpNetfilterFirewall\n", errno);
+        printf("Error : Failed to open file fpNetfilterFirewall\n");
     }
     /*else {
         statusLabel->setText("Successful openning " + QString(FW_CDEV_NAME));
@@ -111,13 +111,13 @@ int main(){
            p=strtok(str,":");
            for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
            item.sip=toUInt(temp);
-           cout<<item.sip;
+           //cout<<item.sip;
 
            //item.dip = strtok(NULL,":").toUInt();
            p=strtok(NULL,":");
            for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
            item.dip=toUInt(temp);
-           cout<<item.dip;
+           //cout<<item.dip;
 
            //item.sport = strtok(NULL,":").toUShort();
            p=strtok(NULL,":");
@@ -163,7 +163,7 @@ int main(){
 
            if(log == 1) {
                item.isLog = true;
-               cout<<item.isLog;
+               //cout<<item.isLog;
            } else {
                item.isLog = false;
            }
