@@ -43,7 +43,7 @@
 
 // log file, don't change, it seems I can't use LOG_FILE_PATH,
 // but use /var/log/myfilter in my code
-#define LOG_FILE_PATH "/var/log/myfilter";
+#define LOG_FILE_PATH "./var/log/myfilter";
 
 // actions defined
 #define FW_ADD_RULE 0
@@ -70,7 +70,7 @@ typedef struct Node{
 
 // module message
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Fengpeng");
+MODULE_AUTHOR("LingQian");
 MODULE_DESCRIPTION("My char driver");
 MODULE_VERSION("1.0.0");
 
@@ -206,10 +206,11 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
   Node tnode = {0,0,0,0,0,0,0,false,false,NULL};
   struct tcphdr *tcph; // Transport header
   struct udphdr *udph;
-  int index = findNodeFilterMatch(&tnode);
+  int index;
+  //= findNodeFilterMatch(&tnode);
   Node *p = lheader;
   int i = 0;
-  printk("\nIn the hook function."); 
+  printk("\nIn the hook function.\n"); 
 
   // set a node, just need to define ip,port and protocol
   if(!skb || !iph) {
@@ -224,7 +225,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
 
   // check ip version
   if(iph->version != 4) {
-      printk("Not IPv4.");
+      printk("Not IPv4.\n");
       return ret;
   }
 
@@ -268,28 +269,31 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
   }
 
   // filter, try to find one
-
+   index = findNodeFilterMatch(&tnode);
   if(index < 0) { // not found, means use default rule NF_ACCEPT;
+    printk("default action NF_ACCEPT\n");
     return ret;
+
   } else {
-    printk("find a rule");
+    printk("find a rule\n");
   }
   // after test ,it is ok to find a rule! 
 
   // after test, the next section has something wrong, cause the computer dump
   // seems unbelieveable, it seems not problem!
   /* judge if permit */
-  printk("before for");
+  printk("before for\n");
 
 
   for(i = 0; i <= index; i++) {
     p = p->next;
   }
 
-  printk("after for");
+  printk("after for\n");
 
   if(!p->isPermit) {
     ret = NF_DROP;
+    printk("action NF_DROP\n");
   }
 
   /* judge if need to write a log, we need node p,that why findNodeFilterMatch return index but not bool */
@@ -318,9 +322,9 @@ void writeLog(Node *packageNode,Node *ruleNode) {
    mm_segment_t old_fs = get_fs();
 
    // log file open, why can't use LOG_FILE_NAME ?
-   file = filp_open("/var/log/myfilter",O_RDWR | O_APPEND | O_CREAT,0644);
+   file = filp_open("./var/log/myfilter",O_RDWR | O_APPEND | O_CREAT,0777);
    if(IS_ERR(file)){
-      printk("Error while openning the log file \"/var/log/myfilter\".");
+      printk("Error while openning the log file \"./var/log/myfilter\".");
       return;
    }
 
@@ -455,6 +459,7 @@ void  addRule(Node *newnode){
     ltail->next->next = t;
     ltail->next = t;
   }
+  printk("add ip:%u",t->sip);
 }
 
 /*
@@ -603,6 +608,7 @@ int findNodeFilterMatch(Node *tnode){
     // if is ICMP, not need to check port
     if(tprotocol == IPPROTO_ICMP) {
       finded = true;
+      printk("original::tsip:%d,tdip:%d,tprotoco:%d\nmatch::psip:%d,pdip:%d,protocol:%d\n",tsip,tdip,tprotocol,sip,dip,p->protocol);
       break;
     }
 
@@ -618,6 +624,7 @@ int findNodeFilterMatch(Node *tnode){
 
     // pass 5 items check
     finded = true;
+    printk("original::tsip:%d,tdip:%d,tprotoco:%d\nmatch::psip:%d,pdip:%d,protocol:%d\n",tsip,tdip,tprotocol,sip,dip,p->protocol);
     break;
   }
 
