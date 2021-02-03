@@ -33,15 +33,15 @@ jobs:
           pwd
           make
           sudo insmod NetfilterFirewall.ko
-          sudo mknod \dev\fpNetfilterFirewall c 245 0
-          cd \dev
+          sudo mknod /dev/fpNetfilterFirewall c 245 0
+          cd /dev
           sudo chmod 777 fpNetfilterFirewall
           
       # kernel目录下进行的操作
       - name: run firewall
         run: |
           cd kernel
-          gcc firewall.cpp -lstdc++ -o firewall.o
+          gcc -std=c++11 firewall.cpp -lstdc++ -o firewall.o
           ls -l
           ./firewall.o
           
