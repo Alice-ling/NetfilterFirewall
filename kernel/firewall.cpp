@@ -14,6 +14,7 @@
 #include<stdio.h> 
 #include<stdlib.h>
 #include <stdbool.h>
+#include <string>
 #include <cstring>
 #include <errno.h> 
 #include <iostream>
@@ -23,7 +24,7 @@ using namespace std;
 #define FW_DEL_RULE 1
 #define FW_CLEAR_RULE 2
 
-#define FW_CDEV_NAME "./fpNetfilterFirewall"
+#define FW_CDEV_NAME "/dev/fpNetfilterFirewall"
 #define _FILE "./rules.dat"
 
 struct Node{
@@ -41,13 +42,13 @@ struct Node{
 };
 
 //实现string到unsigned int的转换
-unsigned int toUInt(string str)
+unsigned int toUInt(char* str,int size)
 {
 	unsigned int result(0);//最大可表示值为4294967296（=2‘32-1）
 	//从字符串首位读取到末位（下标由0到str.size() - 1）
-	for (int i = str.size()-1;i >= 0;i--)
+	for (int i = size-1;i >= 0;i--)
 	{
-		unsigned int temp(0),k = str.size() - i - 1;
+		unsigned int temp(0),k = size - i - 1;
 		//判断是否为数字
 		if (isdigit(str[i]))
 		{
@@ -61,6 +62,7 @@ unsigned int toUInt(string str)
 			//exit(-1);
 			break;
 	}
+        //cout<<result<<endl;
 	return result;
 }
  
@@ -89,8 +91,11 @@ int main(){
    }*/
    fd = open(FW_CDEV_NAME, O_RDWR);
     if(fd <= 0) {
-        printf("Error : Failed to open file fpNetfilterFirewall\n");
+        printf("Error %d : Failed to open file fpNetfilterFirewall\n",errno);
     }
+    /*else{
+        printf("open file fpNetfilterFirewall successfully\n");
+    }*/
     /*else {
         statusLabel->setText("Successful openning " + QString(FW_CDEV_NAME));
     }*/
@@ -109,50 +114,46 @@ int main(){
 
            //item.sip =  
            p=strtok(str,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           item.sip=toUInt(temp);
-           //cout<<item.sip;
+           int i;
+           for(i=0;p[i]!='\0';i++) {temp[i]=p[i];}
+           item.sip=toUInt(p,i);
+           //cout<<"item.sip"<<item.sip<<endl;
+           /*printf("item.sip:%u\n",item.sip);
+           printf("item.sip:%d\n",item.sip);*/
+
 
            //item.dip = strtok(NULL,":").toUInt();
            p=strtok(NULL,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           item.dip=toUInt(temp);
+           for(i=0;p[i]!='\0';i++) temp[i]=p[i];
+           item.dip=toUInt(p,i);
            //cout<<item.dip;
 
            //item.sport = strtok(NULL,":").toUShort();
            p=strtok(NULL,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           item.sport = atoi((char*)temp.c_str());
+           item.sport = atoi(p);
 
            //item.dport = strtok(NULL,":").toUShort();
            p=strtok(NULL,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           item.dport = atoi((char*)temp.c_str());
+           item.dport = atoi(p);
+
 
            //item.protocol = strtok(NULL,":").toUShort();
            p=strtok(NULL,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           item.protocol = atoi((char*)temp.c_str());
+           item.protocol = atoi(p);
 
            //item.sMask = strtok(NULL,":").toShort();
            p=strtok(NULL,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           item.sMask = atoi((char*)temp.c_str());
+           item.sMask = atoi(p);
 
            //item.dMask = strtok(NULL,":").toShort();
            p=strtok(NULL,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           item.dMask = atoi((char*)temp.c_str());
-
-
+           item.dMask = atoi(p);
 
            p=strtok(NULL,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           unsigned short permit = atoi((char*)temp.c_str());
+           unsigned short permit = atoi(p);
 
            p=strtok(NULL,":");
-           for(int i=0;p[i]!='\0';i++) temp[i]=p[i];
-           unsigned short log= atoi((char*)temp.c_str());
+           unsigned short log= atoi(p);
 
 
            if(permit == 1) {
@@ -167,14 +168,17 @@ int main(){
            } else {
                item.isLog = false;
            }
+           
+           ioctl(fd, FW_ADD_RULE, &item);
+
 
         }
         fclose(fp);
-    }
+    } 
    //else printf("open rules.dat fail");
 
     // add rules to table widget, and send to kernel
-       ioctl(fd, FW_ADD_RULE, item);
+
  
     // send to kernel,
     return 0;
